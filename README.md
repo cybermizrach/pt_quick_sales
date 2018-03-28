@@ -1,5 +1,5 @@
 # Profit Trailer Settings: Quick Sales Strategy
-Settings for Profit Trailer and PTMagic. This group of settings is heard towards a quick rate of sales and purchases with sell values around 1% each.
+Settings for Profit Trailer and PTMagic. This group of settings is geared towards a quick rate of sales and purchases with sell values around 1% each. The settings are heavily dependent on PTMagic.
 
 # FAQ
 Q: Will this work with BTC?
