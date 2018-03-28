@@ -1,0 +1,519 @@
+/* 	Settings By:	Discord @stevenshizzle#8860 / Telegram @stevenshizzle
+    Dependencies:   PTMagic 1.4.0 or later
+	Update URL:		https://pastebin.com/u/stevenshizzle
+	Last Update: 	20 MAR 2018
+	Release Notes:	Restructured Downtrend to allow buy-in of a downtrending 
+					pair that shows positive 12h to 3d support.
+					
+					Enabled "StopProcessWhenTriggered" on all single-market 
+					settings.
+
+			
+	***THESE SETTINGS ARE BEING TESTED W/ PTM 1.4.0, USE AT YOUR OWN RISK***
+	
+	***I'm excited about Profit Trailer 2.0. It will have RSI as an indicator
+	   which means we can enable trading and use RSI as a buy value for pairs 
+	   that are in a downtrend. This will increase the number of buys we can 
+	   get into!
+	
+	***Thought Process Behind Settings***
+	1. Reduce risk. I strongly beleive settings are most successful by careful, 
+	   thoughtful, and deliberate application of settings that mitigrate risk 
+	   and exposure to poorly behaved coin pairs. I, like many of you, get my 
+	   knowledge based on seeing consistent results from others. 
+	   
+	2. Skim the top (credit: YouTube "Crypto Face"). This YouTuber has shown 
+	   consistent results trading ETH pairs. He's also shown that using little 
+	   capital while aiming to enter and exit pairs as quickly as possible 
+	   is a safe and effective method to turn a profit.
+	   
+	3. Increase trailing where appropriate. Trailing sell is set based on a preceived 
+	   likelihood of favorable returns. If I think "this type of situation has great 
+	   potential for upside", then the trailing sell is higher. With that, the sell 
+	   value might be lower. The lower sell value is an acceptance of higher return 
+	   but also acknowledging that things don't always go the way we want them to.
+	   
+	4. DCA's are good and vary in depth. What I've seen in "bearish or better" markets 
+	   so far is that when trading 4 pairs at a time (what I'm doing at the moment), 
+	   no more than one pair will enter a DCA4. From there, my assumption is that two 
+	   pairs will not go deeper than DCA3 and I'll get lucky with another pair and only
+	   hit a DCA2. This is my most likely worst case scenario. Can it be worse? Yes. 
+	   Can it be better? Sure! So this assumption, plus my current operating limit of 
+	   4 pairs, is what leads me to an ALL_max_cost_percentage of 2.75% in my 
+	   PAIRS.properties page. A DCA might tie up your capital, but it'll also increase 
+	   your returns with each level of DCA.
+	   			
+	***Market Trends***
+	The trends that I have in place are based on necessity. I identified times where I 
+	either missed an opportunity, or suffered a loss due to not capturing a change in 
+	a specific time period. One of the things I've noticed is that the most important 
+	trends are all within 24 hours. It seems 24 hours and 3 days are strong benchmarks 
+	for stability of a pair, so I rely on those to determine what kind of risk 
+	a pair presents. The name of the game is to mitigate risk and seize opportunities
+	that either present minimal risk and evidence of growth.
+	
+	***Global Settings***
+	Bearish settings are based on a 3 hour anchor. This seems to be a good metric for
+	determining overall health of a market. Bullish settings also require an anchor on
+	1 hour performance. This is because the bullish settings introduce additional risk,
+	so we use an additional metric to ensure the bullish trend is consistent.
+	
+	***Favorable Single Market Settings (most favorable first)***
+	*High Performance*
+		The pair has shown a significant amount of growth in nearly all timescales.
+		The growth of the pair is such that it would not be appropriate to use EMAGAIN
+		since there is such a divergence between the slow and fast EMA lines. In this
+		case, we use the LOWBB strategy and look for a pair to dip to half way 
+		between the top and bottom bollinger bands. In other words, the value of the pair 
+		falls to meet the SMA between the bands. Low trailing buy value is used due to the 
+		high performance of these situations. It's not very likely that a dip would 
+		continue for long enough to "trail" it. Highest trailing profit of all settings.
+	*Dip During 3hr Pump*
+		The pair has been performing well but took a bit of a dip. The strength of the
+		pair suggests it could make a comeback to its previous value. Else, the
+		performance of the pair suggests if it goes into DCA, it won't be for long. 
+		Higher railing profit than other settings. Might be getting rid of this, we'll see.
+    *Recent Downtrend but 12h to 24h Support*
+    	The last 1hr of the pair has shown a dip, but 12hr - 3 day shows positive support. 
+    	This might just be a random dip. There might a DCA or two, but again, positive 
+    	support shows a recovery from the dip is a possibility. 
+	*Well Behaved 3h to 12h*
+		The pair has displayed consistent behavior in the midterm. Higher trailing 
+		profit than the default setting
+	
+	***Unvavorable Single Market Settings (least favorable first)
+	*New Coin*
+		Too much risk. Remove if you want to try to jump on a pump.
+	*Downtrend*
+		Do not purchase a coin that is showing excessive loss risk in any time period.
+		People have commented that downtrend disables a lot of pairs. This is by design.
+		Why would I want to invest money in something that has shown nothing but 
+		consistently poor results?
+	*High Risk Pump*
+		These coins are showing very high increases in value. The chance that they
+		will crash is too great to risk. If the coin were purchased and DCA enabled,
+		it would consume a large majority of capital. If a coin that was purchased and 
+		in pairs become a high-risk pump, then we're very likely in the green. This 
+		setting will take advantage of that fact. It has a huge sell value and trailing
+		profit to ride a coin pair to the peak.
+*/
+
+{
+  "AnalyzerSettings": {
+    "MarketAnalyzer": {
+      "StoreDataMaxHours": 72, // Number of hours to store market data
+      "IntervalMinutes": 2, // Interval in minutes for PTMagic to check market trends and triggers
+      "ExcludeMainCurrency": true, // Excludes the main currency (for example BTC) from market trend analysis
+
+      /* I do not like ADAETH or ICXETH. I don't care what they're doing and I do 
+      not want them to negatively impact analysis of the market as a whole. Remove 
+      BNBETH if you're not on Binance. Remove the others at your discretion =) */
+      
+      "MarketTrends": [
+        {
+          "Name": "Exchange30m",
+          "Platform": "Exchange",
+          "MaxMarkets": 50,
+          "TrendMinutes": 30,
+          "TrendCurrency": "Market",
+          "IgnoredMarkets": "BNBETH, ICXETH, ADAETH"
+		}, 
+        {
+          "Name": "Exchange1h",
+          "Platform": "Exchange",
+          "MaxMarkets": 50,
+          "TrendMinutes": 60,
+          "TrendCurrency": "Market",
+          "IgnoredMarkets": "BNBETH, ICXETH, ADAETH"
+        },
+        {
+          "Name": "Exchange2h",
+          "Platform": "Exchange",
+          "MaxMarkets": 50,
+          "TrendMinutes": 120,
+          "TrendCurrency": "Market",
+          "IgnoredMarkets": "BNBETH, ICXETH, ADAETH"
+        },
+        {
+          "Name": "Exchange3h",
+          "Platform": "Exchange",
+          "MaxMarkets": 50,
+          "TrendMinutes": 180,
+          "TrendCurrency": "Market",
+          "IgnoredMarkets": "BNBETH, ICXETH, ADAETH"
+        },
+        {
+          "Name": "Exchange12h",
+          "Platform": "Exchange",
+          "MaxMarkets": 50,
+          "TrendMinutes": 720,
+          "TrendCurrency": "Market",
+          "IgnoredMarkets": "BNBETH, ICXETH, ADAETH"
+        },
+        {
+          "Name": "Exchange24h",
+          "Platform": "Exchange",
+          "MaxMarkets": 50,
+          "TrendMinutes": 1440,
+          "TrendCurrency": "Market",
+          "IgnoredMarkets": "BNBETH, ICXETH, ADAETH"
+        },
+        {
+          "Name": "Exchange3d",
+          "Platform": "Exchange",
+          "MaxMarkets": 50,
+          "TrendMinutes": 4320,
+          "TrendCurrency": "Market",
+          "IgnoredMarkets": "BNBETH, ICXETH, ADAETH"
+        }
+      ]
+    },
+    "GlobalSettings": [
+    {
+        "SettingName": "Very Bearish",
+        "TriggerConnection": "AND",
+        "Triggers": [
+          {
+            "MarketTrendName": "Exchange3h",
+            "MaxChange": -2.50
+          }
+        ],
+        "PairsProperties": {
+          "ALL_sell_only_mode": true
+        },
+        "DCAProperties": {
+		  "sell_value": 0.75,
+		  "trailing_profit": 0.15,
+		  "ignore_sell_only_mode": false
+        }
+      },
+      {
+        "SettingName": "Bearish",
+        "TriggerConnection": "AND",
+        "Triggers": [
+          {
+            "MarketTrendName": "Exchange3h",
+            "MinChange": -2.50,
+            "MaxChange": -1.00
+          }
+        ],
+        "PairsProperties": {
+		  "ALL_sell_value_OFFSETPERCENT": -20,
+		  "ALL_trailing_profit_OFFSETPERCENT": -10
+        },
+        "DCAProperties": {
+		  "sell_value": 0.70,
+		  "trailing_profit": 0.20
+        }
+      },
+      {
+        "SettingName": "Very Bullish",
+        "TriggerConnection": "AND",
+        "Triggers": [
+          {
+            "MarketTrendName": "Exchange3h",
+            "MinChange": 2.75
+          },
+          {
+            "MarketTrendName": "Exchange1h",
+            "MinChange": -0.25
+          }
+        ],
+        "PairsProperties": {
+		  "ALL_sell_value_OFFSETPERCENT": 20,
+		  "ALL_trailing_profit_OFFSETPERCENT": 15,
+		  "ALL_buy_value": -0.25,
+		  "ALL_dca_enabled": false
+        },
+        "DCAProperties": {
+		  "sell_value": 1.10,
+		  "trailing_profit": 0.40
+        }
+      },
+      {
+        "SettingName": "Bullish",
+        "TriggerConnection": "AND",
+        "Triggers": [
+          {
+            "MarketTrendName": "Exchange3h",
+            "MinChange": 1.50,
+            "MaxChange": 2.75
+          },
+          {
+            "MarketTrendName": "Exchange1h",
+            "MinChange": -0.50
+          }
+        ],
+        "PairsProperties": {
+		  "ALL_sell_value_OFFSETPERCENT": 10,
+		  "ALL_trailing_profit_OFFSETPERCENT": 7.5,
+		  "ALL_buy_value": -0.35
+        },
+        "DCAProperties": {
+		  "sell_value": 1.00,
+		  "trailing_profit": 0.30
+        }
+      },
+      {
+        "SettingName": "Default",
+        "PairsProperties": {
+          "File": "PAIRS.PROPERTIES"
+        },
+        "DCAProperties": {
+          "File": "DCA.PROPERTIES"
+        },
+        "IndicatorsProperties": {
+          "File": "INDICATORS.PROPERTIES"
+        }
+      }
+    ],
+    "SingleMarketSettings": [
+      {
+        "SettingName": "New Coin",
+        "StopProcessWhenTriggered": true,
+        "TriggerConnection": "OR",
+        "Triggers": [
+	     {
+		  "AgeDaysLowerThan": 14
+		 }
+	     ],
+         "PairsProperties": {
+		  "ALL_sell_only_mode": true
+	    }
+      },
+      {
+        "SettingName": "High Risk Pump",
+        "StopProcessWhenTriggered": true,
+        "TriggerConnection": "OR",
+        "Triggers": [
+          {
+            "MarketTrendName": "Exchange30m",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": 4.00
+          },
+		  {
+            "MarketTrendName": "Exchange1h",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": 4.00
+          },
+		  {
+            "MarketTrendName": "Exchange2h",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": 4.00
+          },
+		  {
+            "MarketTrendName": "Exchange3h",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": 4.00
+          },
+		  {
+            "MarketTrendName": "Exchange12h",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": 8.00
+          },
+		  {
+            "MarketTrendName": "Exchange24h",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": 8.00
+          },
+		  {
+            "MarketTrendName": "Exchange3d",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": 24.00
+          } 
+        ],
+        "PairsProperties": {
+          "ALL_sell_only_mode": true,
+          "StopProcessWhenTriggered": true,
+          //Set to -0.99 to visually help determine SOM reason on PT Possible Buy Log
+		  "ALL_buy_value": -0.99,
+          "ALL_sell_value": 0.25,
+          "ALL_trailing_profit": 0.75
+        }
+      },
+      {
+        "SettingName": "Recent Downtrend but 12h to 24h Support",
+        "StopProcessWhenTriggered": true,
+        "TriggerConnection": "AND",
+        "Triggers": [
+          {
+            "MarketTrendName": "Exchange30m",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": -7.50,
+            "MaxChange": 0.00
+          },
+          {
+            "MarketTrendName": "Exchange12h",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": 0.50
+          },
+          {
+            "MarketTrendName": "Exchange24h",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": 1.00,
+            "MaxChange": 8.00
+          },
+          {
+            "MarketTrendName": "Exchange3d",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": 2.00,
+            "MaxChange": 8.00
+          }
+        ],
+        "PairsProperties": {
+		  "ALL_max_cost_percentage_OFFSETPERCENT": 10,
+		  "ALL_buy_value": -0.55,
+		  "ALL_trailing_buy": 0.38,
+          "ALL_sell_value": 1.00,
+          "ALL_trailing_profit": 0.40,
+        }
+      },
+      {
+        "SettingName": "Downtrend",
+        "StopProcessWhenTriggered": true,
+        "TriggerConnection": "OR",
+        "Triggers": [
+          {
+            "MarketTrendName": "Exchange1h",
+            "MarketTrendRelation": "Absolute",
+            "MaxChange": -3.25
+          },
+          {
+            "MarketTrendName": "Exchange2h",
+            "MarketTrendRelation": "Absolute",
+            "MaxChange": -3.00
+          },
+          {
+            "MarketTrendName": "Exchange3h",
+            "MarketTrendRelation": "Absolute",
+            "MaxChange": -3.00
+          },
+          {
+            "MarketTrendName": "Exchange12h",
+            "MarketTrendRelation": "Absolute",
+            "MaxChange": -2.00
+          },
+          {
+            "MarketTrendName": "Exchange24h",
+            "MarketTrendRelation": "Absolute",
+            "MaxChange": -1.00
+          },
+          {
+            "MarketTrendName": "Exchange3d",
+            "MarketTrendRelation": "Absolute",
+            "MaxChange": -5.00
+          }
+        ],
+        "PairsProperties": {
+          "ALL_sell_only_mode": true,
+          //Set to -0.66 to visually help determine SOM reason on PT Possible Buy Log
+		  "ALL_buy_value": -0.66,
+          "ALL_sell_value": 0.50,
+          "ALL_trailing_profit": 0.30
+        }
+      }, 
+	  {
+       "SettingName": "High Performance LOWBB",
+       "StopProcessWhenTriggered": true,
+        "TriggerConnection": "AND",
+        "Triggers": [
+          {
+            "MarketTrendName": "Exchange3d",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": 1.50
+          },
+		  {
+            "MarketTrendName": "Exchange24h",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": 1.50
+          },
+		  {
+            "MarketTrendName": "Exchange12h",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": 1.50
+          },
+		  {
+            "MarketTrendName": "Exchange3h",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": 1.50,
+            "MaxChange": 4.00
+
+          },
+		  {
+            "MarketTrendName": "Exchange1h",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": 0.66,
+            "MaxChange": 4.00
+          },
+		  {
+            "MarketTrendName": "Exchange30m",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": -1.50,
+            "MaxChange": 4.00
+          }
+        ],
+        "PairsProperties": {
+          "ALL_dca_enabled": false,
+		  "ALL_max_cost_percentage_OFFSETPERCENT": 20,
+          "ALL_buy_strategy": "LOWBB",
+          "ALL_buy_value": 50,
+          "ALL_trailing_buy": 0.05,
+          "ALL_sell_value": 1.50,
+          "ALL_trailing_profit": 0.50
+        }
+      },
+      //Not sure I'm going to keep this setting...will think on this
+	  {
+        "SettingName": "Dip During 3hr Pump",
+        "StopProcessWhenTriggered": true,
+        "TriggerConnection": "AND",
+        "Triggers": [
+          {
+            "MarketTrendName": "Exchange30m",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": -0.50,
+            "MaxChange": 4.00
+
+          },
+		  {
+            "MarketTrendName": "Exchange3h",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": 2.00,
+            "MaxChange": 4.00
+
+          }
+        ],
+        "PairsProperties": {
+		  "ALL_max_cost_percentage_OFFSETPERCENT": 15,
+          "ALL_sell_value": 1.00,
+          "ALL_trailing_profit": 0.40
+        }
+      }, 
+      {
+        "SettingName": "Well Behaved 3h to 12h",
+        "StopProcessWhenTriggered": true,
+        "TriggerConnection": "AND",
+        "Triggers": [
+		  {
+            "MarketTrendName": "Exchange3h",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": 1.00,
+            "MaxChange": 4.00
+          },
+		  {
+            "MarketTrendName": "Exchange12h",
+            "MarketTrendRelation": "Absolute",
+            "MinChange": 1.00,
+            "MaxChange": 8.00
+          }
+        ],
+        "PairsProperties": {
+		  "ALL_max_cost_percentage_OFFSETPERCENT": 10,
+          "ALL_buy_value": -0.35,
+          "ALL_sell_value": 1.10,
+          "ALL_trailing_profit": 0.30
+        }
+      }
+    ]
+  }
+}
