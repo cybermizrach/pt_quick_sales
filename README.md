@@ -48,8 +48,10 @@ These coins are showing very high increases in value. The chance that they will 
 Q: Will this work with BTC?
 
 A: Yes. You will need to update the below two properties in your PAIRS.properties.
+
 	market = BTC
-	ALL_max_trading_pairs = ???
+	ALL_max_trading_pairs = _your value here_
+	ALL_min_buy_volume = _your value here_
 
 Q: Are you working on anything new?
 
